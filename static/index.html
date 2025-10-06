@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charity Events</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+    <h1>Heart for Change</h1>
+    <p class="mission">Connecting communities through charity events</p>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="search.html">Search Events</a>
+    </nav>
+</header>
+
+<main>
+    <section class="events-section" id="events-list">
+    </section>
+</main>
+
+<script>
+  var eventsList = document.getElementById('events-list');
+
+  fetch('/api/events/')
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      eventsList.innerHTML = '';
+      var now = new Date();
+      data.forEach(function(event){
+        var start = new Date(event.start_datetime);
+        var end = event.end_datetime ? new Date(event.end_datetime) : start;
+        var statusLabel = (end < now) ? 'Past' : '';
+
+        var card = document.createElement('div');
+        card.className = 'event-card';
+        card.innerHTML = `
+      ${statusLabel ? '<div class="status-badge">'+statusLabel+'</div>' : ''}
+      <img src="${event.image_url || 'https://picsum.photos/400/200?random='+event.id}" alt="${event.name}">
+      <div class="card-content">
+        <h2>${event.name}</h2>
+        <p>${event.purpose}</p>
+        <p>${event.city}, ${event.state}</p>
+        <p>${event.category} | ${event.organization}</p>
+        <a href="event.html?id=${event.id}" class="register-btn">Details</a>
+      </div>
+    `;
+        eventsList.appendChild(card);
+      });
+    });
+
+</script>
+</body>
+</html>

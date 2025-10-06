@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 
   // date filter
   if (date) {
-    conditions.push("e.start_datetime <= ? AND e.end_datetime >= ?");
+    conditions.push("(DATE(e.start_datetime) <= ? AND (e.end_datetime IS NULL OR DATE(e.end_datetime) >= ?))");
     params.push(date, date);
   }
 
