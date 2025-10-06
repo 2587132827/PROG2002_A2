@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Events</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <h1>Search Charity Events</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="search.html">Search Events</a>
+  </nav>
+</header>
+
+<main>
+  <section class="search-section">
+    <div class="search-form">
+      <input type="date" id="filter-date" placeholder="Select Date">
+      <input type="text" id="filter-location" placeholder="City or State">
+      <select id="filter-category">
+        <option value="">All Categories</option>
+      </select>
+      <button id="search-btn">Search</button>
+      <button id="clear-btn">Clear</button>
+    </div>
+    <div class="events-section" id="search-results">
+      <!-- Search results injected by JS -->
+    </div>
+  </section>
+</main>
+
+<script>
+  var categorySelect = document.getElementById('filter-category');
+  var searchBtn = document.getElementById('search-btn');
+  var clearBtn = document.getElementById('clear-btn');
+  var resultsDiv = document.getElementById('search-results');
+
+  // load categories
+  fetch('/api/categories')
+          .then(function(res){ return res.json(); })
+          .then(function(data){
+            data.forEach(function(cat){
+              var opt = document.createElement('option');
+              opt.value = cat.id;
+              opt.textContent = cat.name;
+              categorySelect.appendChild(opt);
+            });
+          });
+
+  function renderEvents(events){
+    resultsDiv.innerHTML = '';
+    var now = new Date();
+    events.forEach(function(event){
+      var start = new Date(event.start_datetime);
+      var end = event.end_datetime ? new Date(event.end_datetime) : start;
+      var statusLabel = (end < now) ? 'Past' : '';
+
+      var card = document.createElement('div');
+      card.className = 'event-card';
+      card.innerHTML = `
+      ${statusLabel ? '<div class="status-badge">'+statusLabel+'</div>' : ''}
+      <img src="${event.image_url || 'https://picsum.photos/400/200?random='+event.id}" alt="${event.name}">
+      <div class="card-content">
+        <h2>${event.name}</h2>
+        <p>${event.purpose}</p>
+        <p>${event.city}, ${event.state}</p>
+        <p>${event.category} | ${event.organization}</p>
+        <a href="event.html?id=${event.id}" class="register-btn">Details</a>
+      </div>
+    `;
+      resultsDiv.appendChild(card);
+    });
+  }
+
+  searchBtn.onclick = function(){
+    var date = document.getElementById('filter-date').value;
+    var location = document.getElementById('filter-location').value;
+    var category_id = categorySelect.value;
+
+    var params = new URLSearchParams();
+    if(date) params.append('date', date);
+    if(location) params.append('location', location);
+    if(category_id) params.append('category_id', category_id);
+
+    fetch('/api/events?' + params.toString())
+            .then(function(res){ return res.json(); })
+            .then(function(data){
+              renderEvents(data);
+            });
+  };
+
+  clearBtn.onclick = function(){
+    document.getElementById('filter-date').value = '';
+    document.getElementById('filter-location').value = '';
+    categorySelect.value = '';
+    resultsDiv.innerHTML = '';
+  };
+
+</script>
+</body>
+</html>
