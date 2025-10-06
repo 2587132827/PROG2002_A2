@@ -40,7 +40,7 @@
         card.className = 'event-card';
         card.innerHTML = `
       ${statusLabel ? '<div class="status-badge">'+statusLabel+'</div>' : ''}
-      <img src="${event.image_url || 'https://picsum.photos/400/200?random='+event.id}" alt="${event.name}">
+      <img src="${event.image_url}" alt="${event.name}">
       <div class="card-content">
         <h2>${event.name}</h2>
         <p>${event.purpose}</p>

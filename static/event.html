@@ -36,18 +36,18 @@
             var statusLabel = (end < new Date()) ? 'Past' : '';
 
             detailDiv.innerHTML = `
-    ${statusLabel ? '<div class="status-badge">'+statusLabel+'</div>' : ''}
-    <img src="${event.image_url || 'https://picsum.photos/800/400?random='+event.id}" alt="${event.name}">
-    <h2>${event.name}</h2>
-    <p><strong>Purpose:</strong> ${event.purpose}</p>
-    <p><strong>Category:</strong> ${event.category}</p>
-    <p><strong>Organization:</strong> ${event.organization} - ${event.mission}</p>
-    <p><strong>Date:</strong> ${start.toLocaleString()} - ${end.toLocaleString()}</p>
-    <p><strong>Location:</strong> ${event.venue_name}, ${event.address}, ${event.city}, ${event.state}</p>
-    <p><strong>Goal vs Progress:</strong> $${(event.goal_amount_cents/100).toLocaleString()} vs $${(event.raised_amount_cents/100).toLocaleString()}</p>
-    <p>${event.description}</p>
-    <button class="register-btn" onclick="alert('This feature is currently under construction')">Register</button>
-  `;
+              ${statusLabel ? '<div class="status-badge">'+statusLabel+'</div>' : ''}
+              <img src="${event.image_url}" alt="${event.name}">
+              <h2>${event.name}</h2>
+              <p><strong>Purpose:</strong> ${event.purpose}</p>
+              <p><strong>Category:</strong> ${event.category}</p>
+              <p><strong>Organization:</strong> ${event.organization} - ${event.mission}</p>
+              <p><strong>Date:</strong> ${start.toLocaleString()} - ${end.toLocaleString()}</p>
+              <p><strong>Location:</strong> ${event.venue_name}, ${event.address}, ${event.city}, ${event.state}</p>
+              <p><strong>Goal vs Progress:</strong> $${(event.goal_amount_cents/100).toLocaleString()} vs $${(event.raised_amount_cents/100).toLocaleString()}</p>
+              <p>${event.description}</p>
+              <button class="register-btn" onclick="alert('This feature is currently under construction')">Register</button>
+            `;
           });
 
 </script>
